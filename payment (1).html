@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment | Glamour</title>
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
+    <style>
+        :root {
+            --glam-gold: #dbb445;
+            --glam-dark: #050505;
+            --glam-card: #0f0f0f;
+            --glam-glass: rgba(255, 255, 255, 0.03);
+            --text-muted: #a0a0a0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--glam-dark);
+            background-image: radial-gradient(circle at top right, rgba(219, 180, 69, 0.05), transparent);
+            color: #ffffff;
+            margin: 0;
+            padding-bottom: 60px;
+        }
+
+        .wrapper { padding: 20px; max-width: 480px; margin: 0 auto; }
+
+        /* --- HEADER & TIMER --- */
+        .header-box { text-align: center; margin: 30px 0; }
+        .step-tag { color: var(--glam-gold); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 2px; }
+        .main-title { font-size: 24px; font-weight: 900; margin-top: 8px; letter-spacing: -0.5px; }
+        
+        .timer-container {
+            background: rgba(219, 180, 69, 0.1);
+            border: 1px solid rgba(219, 180, 69, 0.2);
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        #countdown { font-weight: 800; color: var(--glam-gold); font-variant-numeric: tabular-nums; }
+
+        /* --- ENHANCED PAYMENT CARD --- */
+        .payment-card {
+            background: var(--glam-card);
+            border: 1px solid var(--glam-glass);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, transparent, var(--glam-gold), transparent);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .info-row:last-child { border: none; }
+
+        .label { font-size: 10px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .value { font-size: 17px; font-weight: 800; color: #fff; margin-top: 4px; }
+        .copy-btn { 
+            background: rgba(219, 180, 69, 0.1);
+            color: var(--glam-gold);
+            width: 35px; height: 35px;
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 10px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .copy-btn:hover { background: var(--glam-gold); color: #000; }
+
+        /* --- BUTTONS --- */
+        .btn-platform {
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            width: 100%; padding: 18px; border-radius: 18px;
+            font-weight: 800; font-size: 14px; margin-bottom: 15px;
+            border: none; text-transform: uppercase; transition: 0.3s; text-decoration: none;
+        }
+        .btn-telegram { background: #0088cc; color: #fff; box-shadow: 0 10px 20px rgba(0, 136, 204, 0.2); }
+        .btn-telegram:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0, 136, 204, 0.3); color: #fff; }
+
+        .alert-box {
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--glam-glass);
+            padding: 20px; border-radius: 18px;
+            font-size: 12px; color: #888; text-align: center;
+            line-height: 1.6;
+        }
+
+        /* --- TOAST POPUP --- */
+        #notification-toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(150%);
+            background: rgba(20, 20, 20, 0.95);
+            border: 1px solid var(--glam-gold);
+            backdrop-filter: blur(15px);
+            padding: 15px 25px; border-radius: 50px;
+            display: flex; align-items: center; gap: 15px;
+            z-index: 9999; width: 90%; max-width: 400px;
+            transition: 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        #notification-toast.show { transform: translateX(-50%) translateY(0); }
+        .toast-icon { color: var(--glam-gold); font-size: 18px; }
+        .toast-content { font-size: 12px; color: #eee; }
+        .toast-content strong { color: var(--glam-gold); }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    <div class="header-box">
+        <span class="step-tag">Secure Checkout</span>
+        <h1 class="main-title">Direct Bank Transfer</h1>
+        
+        <div class="timer-container">
+            <i class="fa fa-clock-o"></i>
+            <span>Expires in: <span id="countdown">10:00</span></span>
+        </div>
+    </div>
+
+    <div class="payment-card">
+        <div class="info-row">
+            <div>
+                <span class="label">Amount Payable</span>
+                <div class="value">₦14,000</div>
+            </div>
+            <div class="copy-btn" onclick="copyText('14000', 'Amount')">
+                <i class="fa fa-clone"></i>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div>
+                <span class="label">Receiving Bank</span>
+                <div class="value">MONIEPOINT MFB</div>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div>
+                <span class="label">Account Number</span>
+                <div class="value">7073734725</div>
+            </div>
+            <div class="copy-btn" onclick="copyText('7073734725', 'Account Number')">
+                <i class="fa fa-clone"></i>
+            </div>
+        </div>
+
+        <div class="info-row">
+            <div>
+                <span class="label">Account Name</span>
+                <div class="value">CHINAZA A. REJOICE</div>
+            </div>
+        </div>
+    </div>
+
+    <p class="action-title text-center mb-3" style="font-size: 11px; font-weight: 700; color: var(--text-muted);">UPLOAD RECEIPT TO AGENT</p>
+
+    <a href="https://t.me/Coachnancy5?text=I%20have%20made%20payment%20for%20Glam-Premium" class="btn-platform btn-telegram">
+        <i class="fa fa-paper-plane"></i> Submit Proof via Telegram
+    </a>
+
+    <div class="alert-box">
+        <i class="fa fa-shield" style="color: var(--glam-gold); margin-bottom: 10px; font-size: 18px;"></i><br>
+        Your payment is protected. Once sent, our system verifies the transaction and activates your dashboard within 2-5 minutes.
+    </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="notification-toast">
+    <div class="toast-icon"><i class="fa fa-check-circle"></i></div>
+    <div class="toast-content" id="toast-text"></div>
+</div>
+
+<!-- JS Libraries -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    // 1. SweetAlert Copy Function
+    function copyText(text, label) {
+        navigator.clipboard.writeText(text).then(() => {
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top',
+                showConfirmButton: false,
+                timer: 2000,
+                timerProgressBar: true,
+                background: '#0f0f0f',
+                color: '#fff'
+            });
+            Toast.fire({
+                icon: 'success',
+                title: `${label} copied successfully!`
+            });
+        });
+    }
+
+    // 2. Countdown Timer Logic
+    function startTimer(duration, display) {
+        let timer = duration, minutes, seconds;
+        setInterval(function () {
+            minutes = parseInt(timer / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            display.textContent = minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration; // Reset timer
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        let tenMinutes = 60 * 10,
+        display = document.querySelector('#countdown');
+        startTimer(tenMinutes, display);
+    };
+
+    // 3. Live Notification Logic
+    const names = [
+        "Chinedu O.", "Blessing E.", "Abubakar M.", "Tunde W.", "Gift A.", 
+        "Favour Y.", "Emeka J.", "Sarah U.", "Ibrahim K.", "Chioma R.", 
+        "Olawale P.", "Ngozi S.", "David B.", "Precious Q.", "Musa T.", 
+        "Hassan V.", "Anita L.", "Kelvin Z.", "Chinaza D.", "Okon E."
+    ];
+
+    const toast = document.getElementById('notification-toast');
+    const toastText = document.getElementById('toast-text');
+
+    function showRandomNotification() {
+        const randomName = names[Math.floor(Math.random() * names.length)];
+        const isActivation = Math.random() > 0.5;
+        
+        toastText.innerHTML = isActivation 
+            ? `<strong>${randomName}</strong> just activated GLAM-PREMIUM!` 
+            : `<strong>${randomName}</strong> just withdrew ₦10,000 Bonus!`;
+
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 4000);
+    }
+
+    setInterval(showRandomNotification, 8000);
+    setTimeout(showRandomNotification, 2000);
+</script>
+
+</body>
+</html>
+
