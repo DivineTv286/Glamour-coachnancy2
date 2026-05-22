@@ -74,12 +74,18 @@
             </div>
 
             <div class="input-wrapper">
-                <label for="password" class="input-label">PASSWORD</label>
-                <div class="input-group">
-                    <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
-                    <input type="password" id="password" name="password" placeholder="........." required>
-                </div>
-            </div>
+    <label for="password" class="input-label">PASSWORD</label>
+    <div class="input-group">
+        <span class="input-icon"><i class="fa-solid fa-lock"></i></span>
+        <!-- Added id="password" and wrapper around input -->
+        <input type="password" id="password" name="password" placeholder="........." required>
+        <!-- Added the toggle button at the end of the input group -->
+        <span class="password-toggle" id="toggle-password">
+            <i class="fa-regular fa-eye"></i>
+        </span>
+    </div>
+</div>
+
 
             <button type="submit" class="gold-submit-btn">
                 CONTINUE TO PACKAGES
@@ -341,6 +347,20 @@ body {
     text-decoration: none;
     font-weight: bold;
 }
+        .password-toggle {
+    padding: 18px 20px 18px 0;
+    color: #666;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.password-toggle:hover {
+    color: #dbb445;
+}
+
     </style>
 
     <script>
@@ -370,6 +390,25 @@ signupForm.addEventListener('submit', (e) => {
 
     // Redirect to Dashboard
     window.location.href = "dashboard.html"; 
+});
+        // PASSWORD TOGGLE LOGIC
+const togglePassword = document.getElementById('toggle-password');
+const passwordInput = document.getElementById('password');
+
+togglePassword.addEventListener('click', () => {
+    // Toggle the type attribute between 'password' and 'text'
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+    
+    // Toggle the eye / eye-slash icons
+    const icon = togglePassword.querySelector('i');
+    if (type === 'text') {
+        icon.classList.remove('fa-regular', 'fa-eye');
+        icon.classList.add('fa-solid', 'fa-eye-slash');
+    } else {
+        icon.classList.remove('fa-solid', 'fa-eye-slash');
+        icon.classList.add('fa-regular', 'fa-eye');
+    }
 });
 </script>
 </body>
