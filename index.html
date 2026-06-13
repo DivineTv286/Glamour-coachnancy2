@@ -445,14 +445,16 @@
             </div>
         </div>
     </section>
-
-
     <footer class="section-padding" style="background: #000; border-top: 1px solid var(--glass-border);">
         <div class="container text-center">
             <a class="logo-area justify-content-center mb-4" href="#"><span>❀</span> GLAMOUR</a>
             <p class="text-secondary mx-auto" style="max-width: 600px;">Redefining digital advancement via technology and creativity. Partnering with the next generation of African creators.</p>
             <div class="mt-4">
-                <p class="text-secondary small">&copy; 2026 Glamour Institutional. All Rights Reserved.</p>
+                <p class="text-secondary small mb-1">&copy; 2026 Glamour Institutional. All Rights Reserved.</p>
+                <!-- Your dynamic branding link -->
+                <p class="small" style="color: var(--text-gray);">
+                    Built by <a href="https://yourportfolio.com" target="_blank" style="color: var(--gold); text-decoration: none; font-weight: 600; transition: 0.3s;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">RaphXsoln</a>
+                </p>
             </div>
         </div>
     </footer>
@@ -508,11 +510,21 @@
             $('#chatBox').fadeToggle(300);
         }
 
-        const users = [
+                const users = [
             { name: "Emmanuel", city: "Port Harcourt", flag: "🇳🇬" },
             { name: "Blessing", city: "Lagos", flag: "🇳🇬" },
             { name: "Chisom", city: "Abuja", flag: "🇳🇬" },
-            { name: "Kofi", city: "Accra", flag: "🇬🇭" }
+            { name: "Kofi", city: "Accra", flag: "🇬🇭" },
+            { name: "Tunde", city: "Ibadan", flag: "🇳🇬" },
+            { name: "Chioma", city: "Enugu", flag: "🇳🇬" },
+            { name: "Amina", city: "Kano", flag: "🇳🇬" },
+            { name: "Ama", city: "Kumasi", flag: "🇬🇭" },
+            { name: "Femi", city: "Abeokuta", flag: "🇳🇬" },
+            { name: "Efe", city: "Warri", flag: "🇳🇬" },
+            { name: "Precious", city: "Benin City", flag: "🇳🇬" },
+            { name: "Kwame", city: "Takoradi", flag: "🇬🇭" },
+            { name: "Somto", city: "Asaba", flag: "🇳🇬" },
+            { name: "Rapheal", city: "Uyo", flag: "🇳🇬" }
         ];
 
         function showPopup() {
